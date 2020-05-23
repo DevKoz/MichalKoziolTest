@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using StatsCounter.Services;
 
 namespace StatsCounter.Extensions
 {
@@ -9,7 +10,13 @@ namespace StatsCounter.Extensions
             this IServiceCollection services,
             Uri baseApiUrl)
         {
-            throw new NotImplementedException(); // TODO: add your code here
+            services.AddHttpClient<IGitHubService, GitHubService>("GitHubClient",
+                client =>
+                {
+                    client.BaseAddress = baseApiUrl;
+                });
+
+            return services;
         }
     }
 }

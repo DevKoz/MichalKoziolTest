@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using StatsCounter.Models;
 
 namespace StatsCounter.Services
@@ -20,9 +22,15 @@ namespace StatsCounter.Services
             _httpClient = httpClient;
         }
 
-        public Task<IEnumerable<RepositoryInfo>> GetRepositoryInfosByOwnerAsync(string owner)
+        public async Task<IEnumerable<RepositoryInfo>> GetRepositoryInfosByOwnerAsync(string owner)
         {
-            throw new NotImplementedException(); // TODO: add your code here
+
+            var result  = await _httpClient.GetAsync("/repositories/" + owner);
+
+            var content = result.Content.ReadAsStringAsync();
+            var repos = JsonConvert.DeserializeObject<IEnumerable<RepositoryInfo>>(content.Result);
+
+            return repos;
         }
     }
 }
