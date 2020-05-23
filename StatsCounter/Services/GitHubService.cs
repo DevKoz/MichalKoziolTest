@@ -24,8 +24,8 @@ namespace StatsCounter.Services
 
         public async Task<IEnumerable<RepositoryInfo>> GetRepositoryInfosByOwnerAsync(string owner)
         {
-
-            var result  = await _httpClient.GetAsync("/repositories/" + owner);
+            _httpClient.DefaultRequestHeaders.Add("User-Agent", "C# App");
+            var result = await _httpClient.GetAsync("/users/" + owner + "/repos");
 
             var content = result.Content.ReadAsStringAsync();
             var repos = JsonConvert.DeserializeObject<IEnumerable<RepositoryInfo>>(content.Result);
